@@ -38,7 +38,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
-      flex-direction: row;
       justify-content: center;
     }
 
@@ -96,6 +95,13 @@
       color: #8b4513;
       margin: 10px 0;
       display: none;
+    }
+
+    #subtotalCarrinho {
+      text-align: center;
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 16px;
     }
 
     @media (max-width: 600px) {
@@ -185,7 +191,8 @@
       display: none;
     }
 
-    .entrega-opcoes {
+    .entrega-opcoes,
+    .pagamento-opcoes {
       margin-top: 12px;
       display: flex;
       flex-direction: column;
@@ -193,7 +200,8 @@
       align-items: center;
     }
 
-    .entrega-opcoes label {
+    .entrega-opcoes label,
+    .pagamento-opcoes label {
       font-size: 14px;
       cursor: pointer;
     }
@@ -231,16 +239,18 @@
       <button onclick="adicionar('Coca-cola 310 ml', 6)">Coca-cola 310 ml - R$6</button>
       <button onclick="adicionar('Coca-cola 600 ml', 7)">Coca-cola 600 ml - R$7</button>
     </div>
-        <div class="carrinho">
+          <div class="carrinho">
       <h2>🛒 Carrinho</h2>
       <div id="listaPedido"></div>
 
       <div class="entrega-opcoes">
         <label>
-          <input type="radio" name="entrega" value="retirada" onclick="selecionarEntrega()"> Retirada no balcão
+          <input type="radio" name="entrega" value="retirada" onclick="selecionarEntrega(); atualizarLista();">
+          Retirada no balcão
         </label>
         <label>
-          <input type="radio" name="entrega" value="entrega" onclick="selecionarEntrega()"> Entrega (R$8,00)
+          <input type="radio" name="entrega" value="entrega" onclick="selecionarEntrega(); atualizarLista();">
+          Entrega (R$8,00)
         </label>
       </div>
 
@@ -250,6 +260,20 @@
         <input type="text" id="bairro" placeholder="Bairro" style="width:100%; padding:10px; margin-bottom:6px;">
         <input type="text" id="referencia" placeholder="Referência (opcional)" style="width:100%; padding:10px;">
       </div>
+
+      <h2>Forma de Pagamento</h2>
+      <div class="pagamento-opcoes">
+        <label><input type="radio" name="pagamento" value="dinheiro" onclick="mostrarTroco()"> Dinheiro</label>
+        <label><input type="radio" name="pagamento" value="pix" onclick="ocultarTroco()"> Pix</label>
+        <label><input type="radio" name="pagamento" value="cartao" onclick="ocultarTroco()"> Cartão </label>
+      </div>
+
+      <div id="campoTroco" style="display: none; margin-top: 8px;">
+        <input type="number" id="valorTroco" placeholder="Valor para troco (ex: 50)" style="width:100%; padding:10px; margin-bottom:6px;">
+        <label><input type="checkbox" id="semTroco"> Não preciso de troco</label>
+      </div>
+
+      <div id="subtotalCarrinho" style="text-align:center; font-weight:bold; margin:10px 0;"></div>
 
       <div id="alertaEntrega" class="alerta-entrega">⚠️ Selecione entrega ou retirada antes de finalizar!</div>
 
@@ -283,17 +307,25 @@
       container.innerHTML = "";
 
       const itens = Object.keys(listaPedido);
+      let totalParcial = 0;
+
       if (itens.length === 0) {
         container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+        document.getElementById("subtotalCarrinho").textContent = "";
         return;
       }
 
       itens.forEach((item) => {
+        const q = listaPedido[item].quantidade;
+        const p = listaPedido[item].preco;
+        const subtotal = q * p;
+        totalParcial += subtotal;
+
         const div = document.createElement("div");
         div.className = "item-pedido";
 
         const texto = document.createElement("span");
-        texto.textContent = `${item} (x${listaPedido[item].quantidade})`;
+        texto.textContent = `${item} (x${q}) = R$${subtotal.toFixed(2)}`;
 
         const botaoRemover = document.createElement("button");
         botaoRemover.className = "remover";
@@ -304,15 +336,22 @@
         div.appendChild(botaoRemover);
         container.appendChild(div);
       });
+
+      const entregaSelecionada = document.querySelector('input[name="entrega"]:checked');
+      const taxaEntrega = entregaSelecionada && entregaSelecionada.value === "entrega" ? 8 : 0;
+      const subtotalComEntrega = totalParcial + taxaEntrega;
+
+      document.getElementById("subtotalCarrinho").textContent =
+        taxaEntrega > 0
+          ? `💰 Subtotal com entrega: R$${subtotalComEntrega.toFixed(2)}`
+          : `💰 Subtotal: R$${totalParcial.toFixed(2)}`;
     }
 
     function mostrarAlerta(item) {
       const alerta = document.getElementById("alertaItem");
       alerta.textContent = `✔️ ${item} adicionado ao carrinho`;
       alerta.style.display = "block";
-      setTimeout(() => {
-        alerta.style.display = "none";
-      }, 3000);
+      setTimeout(() => { alerta.style.display = "none"; }, 3000);
     }
 
     function ocultarAlerta() {
@@ -325,6 +364,16 @@
       document.getElementById("campoEndereco").style.display = tipo === "entrega" ? "block" : "none";
     }
 
+    function mostrarTroco() {
+      document.getElementById("campoTroco").style.display = "block";
+    }
+
+    function ocultarTroco() {
+      document.getElementById("campoTroco").style.display = "none";
+      document.getElementById("valorTroco").value = "";
+      document.getElementById("semTroco").checked = false;
+    }
+
     function finalizarPedido() {
       const tipoEntrega = document.querySelector('input[name="entrega"]:checked');
       if (!tipoEntrega) {
@@ -334,6 +383,7 @@
 
       ocultarAlerta();
       const taxaEntrega = tipoEntrega.value === "entrega" ? 8 : 0;
+
       const itens = Object.keys(listaPedido);
       if (itens.length === 0) {
         alert("Carrinho vazio.");
@@ -369,16 +419,43 @@
       }
 
       mensagem += taxaEntrega > 0
-        ? `\n🚚 Entrega: R$${taxaEntrega.toFixed(2)}\n`
-        : `\n🛎️ Retirada no balcão\n`;
+        ? `\n🚚 Entrega: R$${taxaEntrega.toFixed(2)}`
+        : `\n🛎️ Retirada no balcão`;
 
-      mensagem += `\n💰 Total: R$${(total + taxaEntrega).toFixed(2)}`;
+      const tipoPagamento = document.querySelector('input[name="pagamento"]:checked');
+      if (!tipoPagamento) {
+        alert("Escolha uma forma de pagamento.");
+        return;
+      }
+
+      mensagem += `\n💳 Pagamento: ${tipoPagamento.value}`;
+
+      if (tipoPagamento.value === "dinheiro") {
+        const semTroco = document.getElementById("semTroco").checked;
+        const valorTroco = parseFloat(document.getElementById("valorTroco").value.trim());
+        const totalFinal = total + taxaEntrega;
+
+        if (!semTroco && (isNaN(valorTroco) || valorTroco <= 0)) {
+          alert("Informe um valor válido para troco ou marque que não precisa.");
+          return;
+        }
+
+        if (!semTroco && valorTroco < totalFinal) {
+          alert(`O valor digitado para troco (R$${valorTroco.toFixed(2)}) é menor que o total do pedido (R$${totalFinal.toFixed(2)}).`);
+          return;
+        }
+
+        mensagem += semTroco
+          ? `\n💸 Não preciso de troco`
+          : `\n💸 Levo R$${valorTroco.toFixed(2)}, preciso de troco`;
+      }
+
+      mensagem += `\n\n💰 Total: R$${(total + taxaEntrega).toFixed(2)}`;
 
       const numero = "553484127564";
       const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, "_blank");
     }
   </script>
-
 </body>
 </html>
