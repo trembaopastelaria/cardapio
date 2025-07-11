@@ -6,17 +6,26 @@
   <title>Pastelaria Trem Bão</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fffaf0;
-      padding: 20px;
       margin: 0;
+      font-family: Arial, sans-serif;
       font-size: 16px;
+      padding: 20px;
+      background: repeating-linear-gradient(
+        45deg,
+        #f7c85c,
+        #f7c85c 40px,
+        #f6b937 40px,
+        #f6b937 80px
+      );
     }
+
     .logo-container {
       text-align: center;
       margin-bottom: 16px;
     }
+
     .logo-container img {
       max-width: 180px;
       height: auto;
@@ -24,6 +33,7 @@
       border-radius: 8px;
       box-shadow: 0 0 6px rgba(0,0,0,0.1);
     }
+
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -31,6 +41,7 @@
       flex-direction: row;
       justify-content: center;
     }
+
     .menu, .carrinho {
       background: #fff;
       padding: 12px;
@@ -39,12 +50,14 @@
       flex: 1 1 280px;
       max-width: 480px;
     }
+
     .menu {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
     }
+
     h2 {
       width: 100%;
       color: #8b4513;
@@ -52,6 +65,7 @@
       margin-bottom: 8px;
       text-align: center;
     }
+
     button {
       width: 200px;
       padding: 6px 10px;
@@ -63,9 +77,11 @@
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
+
     button:hover {
       background-color: #e9967a;
     }
+
     button.compacto {
       font-size: 11px;
     }
@@ -87,22 +103,27 @@
         flex-direction: column;
         align-items: center;
       }
+
       button, .remover, .finalizar {
         width: 100%;
         font-size: 18px;
         padding: 12px;
       }
+
       button.compacto {
         font-size: 16px;
       }
+
       h2 {
         font-size: 24px;
         margin-top: 16px;
       }
+
       input, .item-pedido span {
         font-size: 17px;
         padding: 10px;
       }
+
       .logo-container img {
         max-width: 120px;
       }
@@ -114,12 +135,14 @@
       margin-bottom: 8px;
       border: 1px solid #eee;
     }
+
     .item-pedido span {
       display: block;
       margin-bottom: 4px;
       font-size: 14px;
       color: #333;
     }
+
     .remover {
       background-color: #f08080;
       color: white;
@@ -132,9 +155,11 @@
       margin: 4px auto;
       display: block;
     }
+
     .remover:hover {
       background-color: #c94c4c;
     }
+
     .finalizar {
       background-color: #32cd32;
       color: white;
@@ -147,9 +172,11 @@
       margin: 12px auto;
       display: block;
     }
+
     .finalizar:hover {
       background-color: #2bb82b;
     }
+
     .alerta-entrega {
       color: #c0392b;
       font-size: 14px;
@@ -157,6 +184,7 @@
       text-align: center;
       display: none;
     }
+
     .entrega-opcoes {
       margin-top: 12px;
       display: flex;
@@ -164,10 +192,12 @@
       gap: 6px;
       align-items: center;
     }
+
     .entrega-opcoes label {
       font-size: 14px;
       cursor: pointer;
     }
+
   </style>
 </head>
 <body>
@@ -338,7 +368,7 @@
         }
       }
 
-      mensagem += taxaEntrega > 
+      mensagem += taxaEntrega > 0
         ? `\n🚚 Entrega: R$${taxaEntrega.toFixed(2)}\n`
         : `\n🛎️ Retirada no balcão\n`;
 
