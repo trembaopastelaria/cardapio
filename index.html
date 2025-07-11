@@ -69,32 +69,33 @@
 
     @media (max-width: 600px) {
       body {
-        padding: 10px;
-      }
-      button {
-        width: 100%;
-        font-size: 16px;
-      }
-      button.compacto {
-        font-size: 14px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      .logo-container img {
-        max-width: 100px;
-      }
-      .remover,
-      .finalizar {
-        width: 100%;
-        font-size: 16px;
-      }
-      input {
-        font-size: 16px;
+        padding: 8px;
       }
       .container {
         flex-direction: column;
         align-items: center;
+      }
+      button, .remover, .finalizar {
+        width: 100%;
+        font-size: 18px;
+        padding: 12px;
+      }
+      button.compacto {
+        font-size: 16px;
+      }
+      h2 {
+        font-size: 24px;
+        margin-top: 16px;
+      }
+      input {
+        font-size: 16px;
+        padding: 10px;
+      }
+      .item-pedido span {
+        font-size: 16px;
+      }
+      .logo-container img {
+        max-width: 120px;
       }
     }
         .item-pedido {
@@ -203,10 +204,10 @@
       </div>
 
       <div id="campoEndereco" style="display: none; margin-top: 12px;">
-        <input type="text" id="rua" placeholder="Rua" style="width:100%; padding:6px; margin-bottom:6px;">
-        <input type="text" id="numero" placeholder="Número" style="width:100%; padding:6px; margin-bottom:6px;">
-        <input type="text" id="bairro" placeholder="Bairro" style="width:100%; padding:6px; margin-bottom:6px;">
-        <input type="text" id="referencia" placeholder="Referência (opcional)" style="width:100%; padding:6px;">
+        <input type="text" id="rua" placeholder="Rua" style="width:100%; padding:10px; margin-bottom:6px;">
+        <input type="text" id="numero" placeholder="Número" style="width:100%; padding:10px; margin-bottom:6px;">
+        <input type="text" id="bairro" placeholder="Bairro" style="width:100%; padding:10px; margin-bottom:6px;">
+        <input type="text" id="referencia" placeholder="Referência (opcional)" style="width:100%; padding:10px;">
       </div>
 
       <div id="alertaEntrega" class="alerta-entrega">⚠️ Selecione entrega ou retirada antes de finalizar!</div>
@@ -330,5 +331,3 @@
 
 </body>
 </html>
-    
-    
