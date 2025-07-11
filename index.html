@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pastelaria Trem Bão</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fffaf0;
+      padding: 20px;
+      margin: 0;
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .logo-container img {
+      max-width: 180px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .menu, .carrinho {
+      background: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      flex: 1 1 280px;
+      max-width: 480px;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    h2 {
+      width: 100%;
+      color: #8b4513;
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    button {
+      width: 200px;
+      padding: 6px 10px;
+      margin: 4px;
+      background-color: #f4a460;
+      border: none;
+      border-radius: 3px;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    button:hover {
+      background-color: #e9967a;
+    }
+    button.compacto {
+      font-size: 11px;
+    }
+        .item-pedido {
+      background: #fffaf0;
+      border-radius: 5px;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #eee;
+    }
+    .item-pedido span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #333;
+    }
+    .remover {
+      background-color: #f08080;
+      color: white;
+      font-size: 13px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 130px;
+      margin: 4px auto;
+      display: block;
+    }
+    .remover:hover {
+      background-color: #c94c4c;
+    }
+    .finalizar {
+      background-color: #32cd32;
+      color: white;
+      font-size: 15px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      width: 200px;
+      margin: 12px auto;
+      display: block;
+    }
+    .finalizar:hover {
+      background-color: #2bb82b;
+    }
+    .alerta-entrega {
+      color: #c0392b;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .entrega-opcoes {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .entrega-opcoes label {
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo-container">
+    <img src="logo trem bao.jpg" alt="Logo Pastelaria Trem Bão">
+  </div>
+
+  <div class="container">
+    <div class="menu">
+            <h2>Pastéis Salgados</h2>
+      <button onclick="adicionar('Carne, queijo e milho', 12)">Carne, queijo e milho - R$12</button>
+      <button class="compacto" onclick="adicionar('Frango cremoso, queijo e milho', 12)">Frango cremoso, queijo e milho - R$12</button>
+      <button onclick="adicionar('Pizza', 12)">Pizza - R$12</button>
+      <button onclick="adicionar('Mussarela', 12)">Mussarela - R$12</button>
+      <button onclick="adicionar('Carne, queijo, milho e jiló', 12)">Carne, queijo, milho e jiló - R$12</button>
+      <button onclick="adicionar('Frango cremoso, queijo, milho e jiló', 12)">Frango cremoso, queijo, milho e jiló - R$12</button>
+
+      <h2>Pastéis Doces</h2>
+      <button onclick="adicionar('Suflair', 12)">Suflair - R$12</button>
+      <button onclick="adicionar('Romeu e Julieta', 12)">Romeu e Julieta - R$12</button>
+      <button onclick="adicionar('Sonho de Valsa', 12)">Sonho de Valsa - R$12</button>
+      <button onclick="adicionar('Ouro Branco', 12)">Ouro Branco - R$12</button>
+
+      <h2>Bebidas</h2>
+      <button onclick="adicionar('Coca-cola 220 ml', 4)">Coca-cola 220 ml - R$4</button>
+      <button onclick="adicionar('Guaraná Antártica 350 ml', 6)">Guaraná Antártica 350 ml - R$6</button>
+      <button onclick="adicionar('Guaraná Mineiro 2L', 10)">Guaraná Mineiro 2L - R$10</button>
+      <button onclick="adicionar('Coca-cola 310 ml', 6)">Coca-cola 310 ml - R$6</button>
+      <button onclick="adicionar('Coca-cola 600 ml', 7)">Coca-cola 600 ml - R$7</button>
+    </div>
+        <div class="carrinho">
+      <h2>🛒 Carrinho</h2>
+      <div id="listaPedido"></div>
+
+      <div class="entrega-opcoes">
+        <label>
+          <input type="radio" name="entrega" value="retirada" onclick="selecionarEntrega()"> Retirada no balcão
+        </label>
+        <label>
+          <input type="radio" name="entrega" value="entrega" onclick="selecionarEntrega()"> Entrega (R$8,00)
+        </label>
+      </div>
+
+      <div id="campoEndereco" style="display: none; margin-top: 12px;">
+        <input type="text" id="rua" placeholder="Rua" style="width:100%; padding:6px; margin-bottom:6px;">
+        <input type="text" id="numero" placeholder="Número" style="width:100%; padding:6px; margin-bottom:6px;">
+        <input type="text" id="bairro" placeholder="Bairro" style="width:100%; padding:6px; margin-bottom:6px;">
+        <input type="text" id="referencia" placeholder="Referência (opcional)" style="width:100%; padding:6px;">
+      </div>
+
+      <div id="alertaEntrega" class="alerta-entrega">⚠️ Selecione entrega ou retirada antes de finalizar!</div>
+
+      <button class="finalizar" onclick="finalizarPedido()">Enviar Pedido no WhatsApp</button>
+    </div>
+  </div>
+    <script>
+    let listaPedido = {};
+
+    function adicionar(item, preco) {
+      if (!listaPedido[item]) {
+        listaPedido[item] = { quantidade: 0, preco: preco };
+      }
+      listaPedido[item].quantidade++;
+      atualizarLista();
+    }
+
+    function remover(item) {
+      if (listaPedido[item]) {
+        listaPedido[item].quantidade--;
+        if (listaPedido[item].quantidade <= 0) {
+          delete listaPedido[item];
+        }
+        atualizarLista();
+      }
+    }
+
+    function atualizarLista() {
+      const container = document.getElementById("listaPedido");
+      container.innerHTML = "";
+
+      const itens = Object.keys(listaPedido);
+      if (itens.length === 0) {
+        container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+        return;
+      }
+
+      itens.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "item-pedido";
+
+        const texto = document.createElement("span");
+        texto.textContent = `${item} (x${listaPedido[item].quantidade})`;
+
+        const botaoRemover = document.createElement("button");
+        botaoRemover.className = "remover";
+        botaoRemover.textContent = "Remover 1";
+        botaoRemover.onclick = () => remover(item);
+
+        div.appendChild(texto);
+        div.appendChild(botaoRemover);
+        container.appendChild(div);
+      });
+    }
+
+    function ocultarAlerta() {
+      document.getElementById("alertaEntrega").style.display = "none";
+    }
+
+    function selecionarEntrega() {
+      ocultarAlerta();
+      const tipo = document.querySelector('input[name="entrega"]:checked').value;
+      document.getElementById("campoEndereco").style.display = tipo === "entrega" ? "block" : "none";
+    }
+
+    function finalizarPedido() {
+      const tipoEntrega = document.querySelector('input[name="entrega"]:checked');
+      if (!tipoEntrega) {
+        document.getElementById("alertaEntrega").style.display = "block";
+        return;
+      }
+
+      ocultarAlerta();
+      const taxaEntrega = tipoEntrega.value === "entrega" ? 8 : 0;
+      const itens = Object.keys(listaPedido);
+      if (itens.length === 0) {
+        alert("Carrinho vazio.");
+        return;
+      }
+
+      let mensagem = "Olá! Gostaria de fazer meu pedido:\n\n";
+      let total = 0;
+
+      itens.forEach((item) => {
+        const q = listaPedido[item].quantidade;
+        const p = listaPedido[item].preco;
+        const subtotal = q * p;
+        total += subtotal;
+        mensagem += `• ${item} (x${q}) = R$${subtotal.toFixed(2)}\n`;
+      });
+
+      if (tipoEntrega.value === "entrega") {
+        const rua = document.getElementById("rua").value.trim();
+        const numero = document.getElementById("numero").value.trim();
+        const bairro = document.getElementById("bairro").value.trim();
+        const referencia = document.getElementById("referencia").value.trim();
+
+        if (!rua || !numero || !bairro) {
+          alert("Preencha os campos de endereço: rua, número e bairro.");
+          return;
+        }
+
+        mensagem += `\n📍 Endereço:\n${rua}, nº ${numero}, ${bairro}`;
+        if (referencia) {
+          mensagem += `\n🔎 Referência: ${referencia}`;
+        }
+      }
+
+      mensagem += taxaEntrega > 0
+        ? `\n🚚 Entrega: R$${taxaEntrega.toFixed(2)}\n`
+        : `\n🛎️ Retirada no balcão\n`;
+
+      mensagem += `\n💰 Total: R$${(total + taxaEntrega).toFixed(2)}`;
+
+      const numero = "553484127564";
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</html>
