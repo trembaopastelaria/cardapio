@@ -5,7 +5,546 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pastelaria Trem Bão</title>
   <style>
+    * { box-sizing:<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pastelaria Trem Bão</title>
+  <style>
     * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      padding: 20px;
+      background: repeating-linear-gradient(45deg, #f7c85c, #f7c85c 40px, #f6b937 40px, #f6b937 80px);
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .logo-container img {
+      max-width: 180px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .menu, .carrinho {
+      background: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      flex: 1 1 280px;
+      max-width: 480px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item-linha {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .item-linha img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .item-linha img:hover {
+      transform: scale(1.05);
+    }
+
+    /* ✨ Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
+    }
+
+    .modal:active,
+    .modal:focus {
+      display: none;
+    }
+
+    h2 {
+      width: 100%;
+      color: #8b4513;
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    button {
+      flex: 1;
+      padding: 6px 10px;
+      background-color: #f4a460;
+      border: none;
+      border-radius: 3px;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    button:hover {
+      background-color: #e9967a;
+    }
+
+    button.compacto {
+      font-size: 11px;
+    }
+
+    #alertaItem {
+      background-color: #fff4da;
+      border: 1px solid #f4a460;
+      padding: 8px;
+      border-radius: 5px;
+      text-align: center;
+      font-weight: bold;
+      color: #8b4513;
+      margin: 10px 0;
+      display: none;
+    }
+
+    #subtotalCarrinho {
+      text-align: center;
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .item-pedido {
+      background: #fffaf0;
+      border-radius: 5px;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #eee;
+    }
+
+    .item-pedido span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .remover {
+      background-color: #f08080;
+      color: white;
+      font-size: 13px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 130px;
+      margin: 4px auto;
+      display: block;
+    }
+
+    .remover:hover {
+      background-color: #c94c4c;
+    }
+
+    .finalizar {
+      background-color: #32cd32;
+      color: white;
+      font-size: 15px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      width: 200px;
+      margin: 12px auto;
+      display: block;
+    }
+
+    .finalizar:hover {
+      background-color: #2bb82b;
+    }
+
+    .alerta-entrega {
+      color: #c0392b;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .entrega-opcoes,
+    .pagamento-opcoes {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .entrega-opcoes label,
+    .pagamento-opcoes label {
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      button, .remover, .finalizar {
+        width: 100%;
+        font-size: 18px;
+        padding: 12px;
+      }
+
+      button.compacto {
+        font-size: 16px;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-top: 16px;
+      }
+
+      input, .item-pedido span {
+        font-size: 17px;
+        padding: 10px;
+      }
+
+      .logo-container img {
+        max-width: 120px;
+      }
+
+      .item-linha {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .item-linha img {
+        width: 100px;
+        height: 100px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="logo trem bao.jpg" alt="Logo Pastelaria Trem Bão" />
+  </div>
+  <div id="alertaItem"></div>
+
+<div class="container">
+  <div class="menu">
+    <h2>Pastéis Salgados</h2>
+    <div class="item-linha"><img src="pastel de carne.jpeg" alt="Pastel de carne" onclick="abrirModal(this.src)"><button onclick="adicionar('Carne, queijo e milho', 12)">Carne, queijo e milho - R$12</button></div>
+    <div class="item-linha"><img src="pastel de frango cremoso.jpeg" alt="Pastel de frango cremoso" onclick="abrirModal(this.src)"><button onclick="adicionar('Frango cremoso, queijo e milho', 12)">Frango cremoso, queijo e milho - R$12</button></div>
+    <div class="item-linha"><img src="pastel de mussarela.jpeg" alt="Pastel de mussarela" onclick="abrirModal(this.src)"><button onclick="adicionar('Mussarela', 12)">Mussarela - R$12</button></div>
+    <div class="item-linha"><img src="pastel de pizza.jpeg" alt="Pastel de pizza" onclick="abrirModal(this.src)"><button onclick="adicionar('Pizza', 12)">Pizza - R$12</button></div>
+    <div class="item-linha"><img src="Pastel de carne.jpeg" alt="Pastel Carne com Jiló" onclick="abrirModal(this.src)"><button onclick="adicionar('Carne, queijo, milho e jiló', 12)">Carne, queijo, milho e jiló - R$12</button></div>
+    <div class="item-linha"><img src="Pastel de frango cremoso.jpeg" alt="Pastel Frango com Jiló" onclick="abrirModal(this.src)"><button onclick="adicionar('Frango cremoso, queijo, milho e jiló', 12)">Frango cremoso, queijo, milho e jiló - R$12</button></div>
+
+    <h2>Pastéis Doces</h2>
+    <div class="item-linha"><img src="pastel de suflair.jpeg" alt="Pastel de suflair" onclick="abrirModal(this.src)"><button onclick="adicionar('Suflair', 12)">Suflair - R$12</button></div>
+    <div class="item-linha"><img src="pastel de romeu e julieta.jpeg" alt="Pastel de romeu e julieta" onclick="abrirModal(this.src)"><button onclick="adicionar('Romeu e Julieta', 12)">Romeu e Julieta - R$12</button></div>
+    <div class="item-linha"><img src="pastel de sonho de valsa.jpeg" alt="Pastel de sonho de valsa" onclick="abrirModal(this.src)"><button onclick="adicionar('Sonho de Valsa', 12)">Sonho de Valsa - R$12</button></div>
+    <div class="item-linha"><img src="pastel de ouro branco.jpeg" alt="Pastel de ouro branco" onclick="abrirModal(this.src)"><button onclick="adicionar('Ouro Branco', 12)">Ouro Branco - R$12</button></div>
+
+    <h2>Bebidas</h2>
+    <div class="item-linha"><img src="coca 220.jpeg" alt="Coca 220 ml" onclick="abrirModal(this.src)"><button onclick="adicionar('Coca-cola 220 ml', 4)">Coca-cola 220 ml - R$4</button></div>
+    <div class="item-linha"><img src="antartica 350.jpeg" alt="Antártica 350 ml" onclick="abrirModal(this.src)"><button onclick="adicionar('Guaraná Antártica 350 ml', 6)">Guaraná Antártica 350 ml - R$6</button></div>
+    <div class="item-linha"><img src="mineiro 2 litros.jpeg" alt="Mineiro 2 litros" onclick="abrirModal(this.src)"><button onclick="adicionar('Guaraná Mineiro 2L', 10)">Guaraná Mineiro 2L - R$10</button></div>
+    <div class="item-linha"><img src="coca 310.jpeg" alt="Coca 310 ml" onclick="abrirModal(this.src)"><button onclick="adicionar('Coca-cola 310 ml', 6)">Coca-cola 310 ml - R$6</button></div>
+    <div class="item-linha"><img src="coca 600.jpeg" alt="Coca 600 ml" onclick="abrirModal(this.src)"><button onclick="adicionar('Coca-cola 600 ml', 7)">Coca-cola 600 ml - R$7</button></div>
+  </div>
+
+  <div class="carrinho">
+    <h2>🛒 Carrinho</h2>
+    <div id="listaPedido"></div>
+
+    <div class="entrega-opcoes">
+      <label><input type="radio" name="entrega" value="retirada" onclick="selecionarEntrega(); atualizarLista();"> Retirada no balcão</label>
+      <label><input type="radio" name="entrega" value="entrega" onclick="selecionarEntrega(); atualizarLista();"> Entrega (R$8,00)</label>
+    </div>
+
+    <div id="campoEndereco" style="display: none; margin-top: 12px;">
+      <input type="text" id="rua" placeholder="Rua" style="width:100%; padding:10px; margin-bottom:6px;">
+      <input type="text" id="numero" placeholder="Número" style="width:100%; padding:10px; margin-bottom:6px;">
+      <input type="text" id="bairro" placeholder="Bairro" style="width:100%; padding:10px; margin-bottom:6px;">
+      <input type="text" id="referencia" placeholder="Referência (opcional)" style="width:100%; padding:10px;">
+    </div>
+
+    <h2>Forma de Pagamento</h2>
+    <div class="pagamento-opcoes">
+      <label><input type="radio" name="pagamento" value="dinheiro" onclick="mostrarTroco()"> Dinheiro</label>
+      <label><input type="radio" name="pagamento" value="pix" onclick="ocultarTroco()"> Pix</label>
+      <label><input type="radio" name="pagamento" value="cartao" onclick="ocultarTroco()"> Cartão</label>
+    </div>
+
+    <div id="campoTroco" style="display: none; margin-top: 8px;">
+      <input type="number" id="valorTroco" placeholder="Valor para troco (ex: 50)" style="width:100%; padding:10px; margin-bottom:6px;">
+      <label><input type="checkbox" id="semTroco"> Não preciso de troco</label>
+    </div>
+
+    <div id="subtotalCarrinho"></div>
+    <div id="alertaEntrega" class="alerta-entrega">⚠️ Selecione entrega ou retirada antes de finalizar!</div>
+    <button class="finalizar" onclick="finalizarPedido()">Enviar Pedido no WhatsApp</button>
+  </div>
+</div>
+<script>
+  // Modal de imagem
+  function abrirModal(src) {
+    const modal = document.getElementById("modalImagem");
+    const imagem = document.getElementById("imagemModal");
+    imagem.src = src;
+    modal.style.display = "flex";
+  }
+
+  function fecharModal() {
+    document.getElementById("modalImagem").style.display = "none";
+    document.getElementById("imagemModal").src = "";
+  }
+
+  let listaPedido = {};
+
+  function adicionar(item, preco) {
+    if (!listaPedido[item]) {
+      listaPedido[item] = { quantidade: 0, preco: preco };
+    }
+    listaPedido[item].quantidade++;
+    atualizarLista();
+    mostrarAlerta(item);
+  }
+
+  function remover(item) {
+    if (listaPedido[item]) {
+      listaPedido[item].quantidade--;
+      if (listaPedido[item].quantidade <= 0) {
+        delete listaPedido[item];
+      }
+      atualizarLista();
+    }
+  }
+
+  function atualizarLista() {
+    const container = document.getElementById("listaPedido");
+    container.innerHTML = "";
+
+    const itens = Object.keys(listaPedido);
+    let totalParcial = 0;
+
+    if (itens.length === 0) {
+      container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+      document.getElementById("subtotalCarrinho").textContent = "";
+      return;
+    }
+
+    itens.forEach((item) => {
+      const q = listaPedido[item].quantidade;
+      const p = listaPedido[item].preco;
+      const subtotal = q * p;
+      totalParcial += subtotal;
+
+      const div = document.createElement("div");
+      div.className = "item-pedido";
+
+      const texto = document.createElement("span");
+      texto.textContent = `${item} (x${q}) = R$${subtotal.toFixed(2)}`;
+
+      const botaoRemover = document.createElement("button");
+      botaoRemover.className = "remover";
+      botaoRemover.textContent = "Remover 1";
+      botaoRemover.onclick = () => remover(item);
+
+      div.appendChild(texto);
+      div.appendChild(botaoRemover);
+      container.appendChild(div);
+    });
+
+    const entregaSelecionada = document.querySelector('input[name="entrega"]:checked');
+    const taxaEntrega = entregaSelecionada && entregaSelecionada.value === "entrega" ? 8 : 0;
+    const subtotalComEntrega = totalParcial + taxaEntrega;
+
+    document.getElementById("subtotalCarrinho").textContent =
+      taxaEntrega > 0
+        ? `💰 Subtotal com entrega: R$${subtotalComEntrega.toFixed(2)}`
+        : `💰 Subtotal: R$${totalParcial.toFixed(2)}`;
+  }
+
+  function mostrarAlerta(item) {
+    const alerta = document.getElementById("alertaItem");
+    alerta.textContent = `✔️ ${item} adicionado ao carrinho`;
+    alerta.style.display = "block";
+    setTimeout(() => { alerta.style.display = "none"; }, 3000);
+  }
+
+  function ocultarAlerta() {
+    document.getElementById("alertaEntrega").style.display = "none";
+  }
+
+  function selecionarEntrega() {
+    ocultarAlerta();
+    const tipo = document.querySelector('input[name="entrega"]:checked').value;
+    document.getElementById("campoEndereco").style.display = tipo === "entrega" ? "block" : "none";
+  }
+
+  function mostrarTroco() {
+    document.getElementById("campoTroco").style.display = "block";
+  }
+
+  function ocultarTroco() {
+    document.getElementById("campoTroco").style.display = "none";
+    document.getElementById("valorTroco").value = "";
+    document.getElementById("semTroco").checked = false;
+  }
+
+  function finalizarPedido() {
+    const tipoEntrega = document.querySelector('input[name="entrega"]:checked');
+    if (!tipoEntrega) {
+      document.getElementById("alertaEntrega").style.display = "block";
+      return;
+    }
+
+    ocultarAlerta();
+    const taxaEntrega = tipoEntrega.value === "entrega" ? 8 : 0;
+
+    const itens = Object.keys(listaPedido);
+    if (itens.length === 0) {
+      alert("Carrinho vazio.");
+      return;
+    }
+
+    let mensagem = "Olá! Gostaria de fazer meu pedido:\n\n";
+    let total = 0;
+
+    itens.forEach((item) => {
+      const q = listaPedido[item].quantidade;
+      const p = listaPedido[item].preco;
+      const subtotal = q * p;
+      total += subtotal;
+      mensagem += `• ${item} (x${q}) = R$${subtotal.toFixed(2)}\n`;
+    });
+
+    if (tipoEntrega.value === "entrega") {
+      const rua = document.getElementById("rua").value.trim();
+      const numero = document.getElementById("numero").value.trim();
+      const bairro = document.getElementById("bairro").value.trim();
+      const referencia = document.getElementById("referencia").value.trim();
+
+      if (!rua || !numero || !bairro) {
+        alert("Preencha os campos de endereço: rua, número e bairro.");
+        return;
+      }
+
+      mensagem += `\n📍 Endereço:\n${rua}, nº ${numero}, ${bairro}`;
+      if (referencia) {
+        mensagem += `\n🔎 Referência: ${referencia}`;
+      }
+    }
+
+    mensagem += taxaEntrega > 0
+      ? `\n🚚 Entrega: R$${taxaEntrega.toFixed(2)}`
+      : `\n🛎️ Retirada no balcão`;
+
+    const tipoPagamento = document.querySelector('input[name="pagamento"]:checked');
+    if (!tipoPagamento) {
+      alert("Escolha uma forma de pagamento.");
+      return;
+    }
+
+    mensagem += `\n💳 Pagamento: ${tipoPagamento.value}`;
+
+    if (tipoPagamento.value === "dinheiro") {
+      const semTroco = document.getElementById("semTroco").checked;
+      const valorTroco = parseFloat(document.getElementById("valorTroco").value.trim());
+      const totalFinal = total + taxaEntrega;
+
+      if (!semTroco && (isNaN(valorTroco) || valorTroco <= 0)) {
+        alert("Informe um valor válido para troco ou marque que não precisa.");
+        return;
+      }
+
+      if (!semTroco && valorTroco < totalFinal) {
+        alert(`O valor digitado para troco (R$${valorTroco.toFixed(2)}) é menor que o total do pedido (R$${totalFinal.toFixed(2)}).`);
+        return;
+      }
+
+      mensagem += semTroco
+        ? `\n💸 Não preciso de troco`
+        : `\n💸 Levo R$${valorTroco.toFixed(2)}, preciso de troco`;
+    }
+
+    mensagem += `\n\n💰 Total: R$${(total + taxaEntrega).toFixed(2)}`;
+
+    const numero = "553484127564";
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, "_blank");
+  }
+</script>
+
+<!-- Modal da imagem ampliada -->
+<div class="modal" id="modalImagem" onclick="fecharModal()">
+  <img id="imagemModal" src="" alt="Produto ampliado">
+</div>
+
+<footer style="
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  text-align: center;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  color: #3d2a00;
+  font-size: 14px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+">
+  <p>📱 WhatsApp para pedidos: <strong>34 9 8412-7564</strong></p>
+  <p>📸 Instagram: <a href="https://www.instagram.com/trembao.ptc" target="_blank" style="color:#3d2a00;" rel="noopener">@trembao.ptc</a></p>
+  <p>🚚 Entrega rápida • Pastel no capricho!</p>
+</footer>
+</body>
+</html>border-box; }
 
     body {
       margin: 0;
