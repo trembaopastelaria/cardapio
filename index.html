@@ -1007,16 +1007,39 @@
                     </h2>
                     <div class="products-grid">
            <div class="product-card combo-card">
+            
+                            <div class="product-image" style="background-image: url('combo basic.png')">
+                                <div class="product-badge">oferta</div>
+
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">Combo basic</h3>
+                                <p class="product-description">1 Pastel  + 1 coca 220ml</p>
+                                <div class="product-footer">
+                                    <div>
+                                        <span class="product-price">R$ 15,99</span>
+                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 16,00</small>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <button class="qty-btn" onclick="changeQuantity('combo-basic', -1)">-</button>
+                                        <span class="qty-display" id="qty-combo-basic">0</span>
+                                        <button class="qty-btn" onclick="changeQuantity('combo-basic', 1)">+</button>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart" onclick="addToCart('combo-basic', 'Combo Basic', 15.99)">Adicionar</button>
+                            </div>
+                        </div>
+ <div class="product-card combo-card">
                             <div class="product-image" style="background-image: url('combo classic.png')">
                                 <div class="product-badge">oferta</div>
 
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Combo classic</h3>
-                                <p class="product-description">1 Pastel  + 1 Refrigerante 350ml</p>
+                                <p class="product-description">1 Pastel e uma coca 310ml ou guaraná antártica 350ml </p>
                                 <div class="product-footer">
                                     <div>
-                                        <span class="product-price">R$ 17,50</span>
+                                        <span class="product-price">R$ 17,99</span>
                                         <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 18,00</small>
                                     </div>
                                     <div class="quantity-controls">
@@ -1025,10 +1048,9 @@
                                         <button class="qty-btn" onclick="changeQuantity('combo-classic', 1)">+</button>
                                     </div>
                                 </div>
-                                <button class="add-to-cart" onclick="addToCart('combo-classic', 'Combo Classic', 17.50)">Adicionar</button>
+                                <button class="add-to-cart" onclick="addToCart('combo-classic', 'Combo Classic', 17.99)">Adicionar</button>
                             </div>
                         </div>
-
                         <div class="product-card combo-card">
                             <div class="product-image" style="background-image: url('combo casal.png')">
                                 <div class="product-badge">oferta</div>
@@ -1048,21 +1070,21 @@
                                         <button class="qty-btn" onclick="changeQuantity('combo-casal', 1)">+</button>
                                     </div>
                                 </div>
-                                <button class="add-to-cart" onclick="addToCart('combo-casal', 'Combo Doce', 29,99)">Adicionar</button>
+                                <button class="add-to-cart" onclick="addToCart('combo-casal', 'Combo Casal', 29,99)">Adicionar</button>
                             </div>
                         </div>
 
                         <div class="product-card combo-card">
-                            <div class="product-image" style="background-image: linear-gradient(45deg, #FFA500, #FF6B35), url('pastel_carne.jpeg'); background-blend-mode: overlay;">
+                            <div class="product-image" style="background-image: url('combo familia.png')">
                                 <div class="product-badge">Popular</div>
                             </div>
                             <div class="product-info">
                                 <h3 class="product-name">Combo Família</h3>
-                                <p class="product-description">3 Pastéis Salgados + 1 Guaraná Mineiro 2L</p>
+                                <p class="product-description">3 Pastéis Salgados + 1 coca cola 2L</p>
                                 <div class="product-footer">
                                     <div>
-                                        <span class="product-price">R$ 45,00</span>
-                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 46,00</small>
+                                        <span class="product-price">R$ 49,90</span>
+                                        <small style="text-decoration: line-through; opacity: 0.8; margin-left: 8px;">R$ 50,00</small>
                                     </div>
                                     <div class="quantity-controls">
                                         <button class="qty-btn" onclick="changeQuantity('combo-familia', -1)">-</button>
@@ -1070,7 +1092,7 @@
                                         <button class="qty-btn" onclick="changeQuantity('combo-familia', 1)">+</button>
                                     </div>
                                 </div>
-                                <button class="add-to-cart" onclick="addToCart('combo-familia', 'Combo Família', 45.00)">Adicionar</button>
+                                <button class="add-to-cart" onclick="addToCart('combo-familia', 'Combo Família', 49.90)">Adicionar</button>
                             </div>
                         </div>
                     </div>
@@ -1406,7 +1428,7 @@
                 return;
             }
 
-            let message = `🥟 *PEDIDO TREMBÃO PASTELARIA* 🥟\n\n`;
+            let message = `🥟 *PEDIDO TREM BÃO PASTELARIA* 🥟\n\n`;
             message += `👤 *Cliente:* ${name}\n`;
             message += `📱 *Telefone:* ${phone}\n\n`;
 
