@@ -1219,7 +1219,10 @@
                         </div>
                     </div>
                 </div>
-
+<div class="form-group" id="troco-group" style="display: none;">
+    <label>Troco para quanto?</label>
+    <input type="number" id="troco-value" placeholder="Ex: 50.00">
+</div>
                 <div class="form-group">
                     <label>Observações:</label>
                     <textarea id="order-notes" placeholder="Alguma observação especial?"></textarea>
@@ -1408,66 +1411,90 @@
             updateCartDisplay();
         }
 
-        function selectPaymentOption(method) {
-            paymentMethod = method;
-            document.querySelectorAll('.payment-options .option-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
+       function selectPaymentOption(method) {
+    paymentMethod = method;
+
+    // Atualiza o botão selecionado visualmente
+    document.querySelectorAll('.payment-options .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    event.target.classList.add('selected');
+
+    // Exibe ou esconde o campo de troco
+    const trocoGroup = document.getElementById('troco-group');
+    if (method === 'money') {
+        trocoGroup.style.display = 'block'; // mostra se for dinheiro
+    } else {
+        trocoGroup.style.display = 'none'; // esconde se for pix ou cartão
+    }
+}
+function sendWhatsAppOrder() {
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const address = document.getElementById('customer-address').value;
+    const notes = document.getElementById('order-notes').value;
+    const trocoValue = document.getElementById('troco-value')?.value;
+
+    if (!name || !phone) {
+        alert('Por favor, preencha nome e telefone!');
+        return;
+    }
+
+    if (deliveryType === 'delivery' && !address) {
+        alert('Por favor, preencha o endereço para entrega!');
+        return;
+    }
+
+    let message = `🥟 *PEDIDO TREM BÃO PASTELARIA* 🥟\n\n`;
+    message += `👤 *Cliente:* ${name}\n`;
+    message += `📱 *Telefone:* ${phone}\n\n`;
+
+    message += `🛒 *ITENS DO PEDIDO:*\n`;
+    let subtotal = 0;
+    for (const [id, item] of Object.entries(cart)) {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        message += `• ${item.quantity}x ${item.name} - R$ ${itemTotal.toFixed(2)}\n`;
+    }
+
+    message += `\n💰 *VALORES:*\n`;
+    message += `Subtotal: R$ ${subtotal.toFixed(2)}\n`;
+
+    const deliveryFee = deliveryType === 'delivery' ? 8.00 : 0.00;
+    const total = subtotal + deliveryFee;
+    message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}\n`;
+    message += `*Total: R$ ${total.toFixed(2)}*\n\n`;
+
+    message += `🚚 *ENTREGA:* ${deliveryType === 'delivery' ? 'Entrega' : 'Retirada no balcão'}\n`;
+    if (deliveryType === 'delivery') {
+        message += `📍 *Endereço:* ${address}\n`;
+    }
+
+    message += `💳 *Pagamento:* ${
+        paymentMethod === 'money' ? 'Dinheiro' :
+        paymentMethod === 'pix' ? 'Pix' : 'Cartão'
+    }\n`;
+
+    // 💵 Validação do valor de troco
+    if (paymentMethod === 'money' && trocoValue) {
+        const trocoFloat = parseFloat(trocoValue);
+        if (trocoFloat < total) {
+            alert(`O valor do troco é menor que o total do pedido! Total: R$ ${total.toFixed(2)}`);
+            return;
         }
 
-        function sendWhatsAppOrder() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const address = document.getElementById('customer-address').value;
-            const notes = document.getElementById('order-notes').value;
+        message += `🪙 *Troco para:* R$ ${trocoFloat.toFixed(2)}\n`;
+    }
 
-            if (!name || !phone) {
-                alert('Por favor, preencha nome e telefone!');
-                return;
-            }
+    if (notes) {
+        message += `📝 *Observações:* ${notes}\n`;
+    }
 
-            if (deliveryType === 'delivery' && !address) {
-                alert('Por favor, preencha o endereço para entrega!');
-                return;
-            }
+    message += `\n⏰ *Tempo estimado:* 45-60 minutos`;
 
-            let message = `🥟 *PEDIDO TREM BÃO PASTELARIA* 🥟\n\n`;
-            message += `👤 *Cliente:* ${name}\n`;
-            message += `📱 *Telefone:* ${phone}\n\n`;
-
-            message += `🛒 *ITENS DO PEDIDO:*\n`;
-            let subtotal = 0;
-            for (const [id, item] of Object.entries(cart)) {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                message += `• ${item.quantity}x ${item.name} - R$ ${itemTotal.toFixed(2)}\n`;
-            }
-
-            message += `\n💰 *VALORES:*\n`;
-            message += `Subtotal: R$ ${subtotal.toFixed(2)}\n`;
-            
-            const deliveryFee = deliveryType === 'delivery' ? 8.00 : 0.00;
-            message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}\n`;
-            message += `*Total: R$ ${(subtotal + deliveryFee).toFixed(2)}*\n\n`;
-
-            message += `🚚 *ENTREGA:* ${deliveryType === 'delivery' ? 'Entrega' : 'Retirada no balcão'}\n`;
-            if (deliveryType === 'delivery') {
-                message += `📍 *Endereço:* ${address}\n`;
-            }
-
-            message += `💳 *Pagamento:* ${paymentMethod === 'money' ? 'Dinheiro' : paymentMethod === 'pix' ? 'Pix' : 'Cartão'}\n`;
-
-            if (notes) {
-                message += `📝 *Observações:* ${notes}\n`;
-            }
-
-            message += `\n⏰ *Tempo estimado:* 45-60 minutos`;
-
-            const whatsappUrl = `https://wa.me/5534984127564?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
+    const whatsappUrl = `https://wa.me/5534984127564?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
         // Handle responsive layout
         function handleResize() {
             const cartSection = document.querySelector('.cart-section');
